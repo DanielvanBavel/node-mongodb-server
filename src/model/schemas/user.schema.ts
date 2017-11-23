@@ -4,11 +4,14 @@ import { IRecipeDocument, RecipeSchema } from './recipe.schema';
 export interface IUserDocument extends Document {
     name: string;
     title: string;
-    recipes: [IRecipeDocument];
+    recipes: Schema.Types.ObjectId[] | IRecipeDocument[];
 }
 
 export const UserSchema: Schema = new Schema({
     name: String,
     title: String,
-    recipes: [RecipeSchema]
+    recipes: [{
+        type: Schema.Types.ObjectId,
+        ref: 'recipes'
+    }]
 });
