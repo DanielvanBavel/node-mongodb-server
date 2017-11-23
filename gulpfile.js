@@ -1,62 +1,56 @@
-//
-// Gulpfile waarmee je, naast heel veel andere zaken, een SonarQube.com analyse kunt genereren.
-// 
-// Installeer gulp via 'npm install gulp' (zie package.json).
-// In package.json staat een script-regel om een analyse te genereren.
-// Voer deze uit via 'gulp sonarqube' of via npm run sonar'. 
-// Het resultaat van je analyse zie je - wanneer je een account hebt - 
-// op https://sonarqube.com. 
-//
-var gulp = require('gulp');
-var sonarqubeScanner = require('sonarqube-scanner');
-var runSequence = require('run-sequence');
-var istanbul = require('gulp-istanbul');
-var mocha = require('gulp-mocha');
+let gulp = require('gulp');
+let ts = require('gulp-typescript');
+let sourcemaps = require('gulp-sourcemaps');
+let tsProject = ts.createProject('tsconfig.json');
+let del = require('del');
+let nodemon = require('gulp-nodemon');
+let runSequence = require('run-sequence');
 
-//
-// Task om Sonar analyse te genereren.
-// Voer deze uit via 'gulp sonarqube' of via npm run sonar'.
-//
-gulp.task('sonarqube', ['test'], function(callback) {
-    //
-    // Info over instellingen van sonarqubeScanner: 
-    // https://docs.sonarqube.org/display/SONAR/Analysis+Parameters
-    //
-    // ----------------------------------------------------
-    sonarqubeScanner({
-        serverUrl: "https://sonarqube.com",
-        options: {
-            "sonar.organization": "avansinformaticabreda",
-            "sonar.projectKey": "avansinformaticabreda:master",
-            "sonar.login": "9ff8119ecea9f6c15d6c461a62dcc2d8db3439e1",
-            "sonar.projectName": "node-todolist",
-            "sonar.working.directory": "./.sonar",
-            "sonar.tests": "test",
-            "sonar.javascript.lcov.reportPath": "coverage/lcov.info",
-            "sonar.exclusions": "gulpfile.js, .gitignore, *.md, *.yml, *.sql, *.txt, *.json, node_modules/**, coverage/**, test/**",
-            "sonar.verbose": "true"
+gulp.task('clean', () => {
+    return del([
+        tsProject.options.outDir
+    ]);
+});
+
+gulp.task('compile', () => {
+    let tsResult = tsProject.src()
+        .pipe(sourcemaps.init())
+        .pipe(tsProject());
+
+    return tsResult.js
+        .pipe(gulp.dest(tsProject.options.outDir))
+        .pipe(sourcemaps.write());
+});
+
+gulp.task('watch', () => {
+    return gulp.watch('src/**/*', ['compile']);
+});
+
+gulp.task('serve.prod', ['build', 'watch'], () => {
+    nodemon({
+        script: tsProject.options.outDir + '/index.js',
+        env: {
+            NODE_ENV: 'production'
         }
-    }, callback);
+    }).on('restart', () => {
+        console.log('Node app restarted.');
+    });
 });
 
-gulp.task('test', ['pre-test'], function() {
-    return gulp.src(['test/**/*.js'])
-        .pipe(mocha())
-        // Creating the reports after tests ran
-        .pipe(istanbul.writeReports());
+gulp.task('serve.dev', ['build', 'watch'], () => {
+    nodemon({
+        script: tsProject.options.outDir + '/index.js',
+        watch: [tsProject.options.outDir],
+        env: {
+            NODE_ENV: 'development'
+        }
+    });
 });
 
-gulp.task('pre-test', function() {
-    return gulp.src(['*.js', 'api/**/*.js', 'auth/**/*.js', 'config/**/*.js'])
-        // Covering files
-        .pipe(istanbul())
-        // Force `require` to return covered files
-        .pipe(istanbul.hookRequire());
+gulp.task('serve', ['serve.dev']);
+
+gulp.task('build', (cb) => {
+    runSequence('clean', 'compile', cb);
 });
 
-//
-// Default gulp task, moet altijd aanwezig zijn.
-//
-gulp.task('default', function() {
-    runSequence('sonarqube');
-});
+gulp.task('default', ['serve']);
