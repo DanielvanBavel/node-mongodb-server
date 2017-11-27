@@ -24,6 +24,10 @@ routes.get('/:id', (req, res, next) => {
 routes.post('/', (req, res, next) => {
     const recipeProps = req.body;
 
+    if (recipeProps._id != null) {
+        delete recipeProps._id;
+    }
+
     Recipe.create(recipeProps)
         .then((recipe) => {
             res.status(201).json(recipe);
