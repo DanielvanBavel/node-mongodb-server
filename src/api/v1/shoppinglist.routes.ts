@@ -6,7 +6,7 @@ const routes = express.Router();
 routes.get('/', (req, res, next) => {
     Shoppinglist.find({})
         .then((shoppinglist) => {
-            res.status(200).json(Shoppinglist);
+            res.status(200).json(shoppinglist);
         })
         .catch(next);
 });
