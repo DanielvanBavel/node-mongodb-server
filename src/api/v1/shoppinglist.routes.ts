@@ -12,41 +12,41 @@ routes.get('/', (req, res, next) => {
 });
 
 routes.get('/:id', (req, res, next) => {
-    const ShoppinglistId = req.params.id;
+    const shoppinglistId = req.params.id;
 
-    Shoppinglist.findOne({ _id: ShoppinglistId })
-        .then((Shoppinglist) => {
-            res.status(200).json(Shoppinglist);
+    Shoppinglist.findOne({ _id: shoppinglistId })
+        .then((shoppinglist) => {
+            res.status(200).json(shoppinglist);
         })
         .catch(next);
 });
 
 routes.post('/', (req, res, next) => {
-    const ShoppinglistProps = req.body;
+    const shoppinglistProps = req.body;
 
-    Shoppinglist.create(ShoppinglistProps)
-        .then((Shoppinglist) => {
-            res.status(201).json(Shoppinglist);
+    Shoppinglist.create(shoppinglistProps)
+        .then((shoppinglist) => {
+            res.status(201).json(shoppinglist);
         })
         .catch(next);
 });
 
 routes.put('/:id', (req, res, next) => {
-    const ShoppinglistId = req.params.id;
-    const ShoppinglistProps = req.body;
+    const shoppinglistId = req.params.id;
+    const shoppinglistProps = req.body;
 
     Shoppinglist.findByIdAndUpdate({
-        _id: ShoppinglistId
-    }, ShoppinglistProps)
-        .then(() => Shoppinglist.findById({ _id: ShoppinglistId }))
-        .then((Shoppinglist) => res.status(202).json(Shoppinglist))
+        _id: shoppinglistId
+    }, shoppinglistProps)
+        .then(() => Shoppinglist.findById({ _id: shoppinglistId }))
+        .then((shoppinglist) => res.status(202).json(shoppinglist))
         .catch(next);
 });
 
 routes.delete('/:id', (req, res, next) => {
-    const ShoppinglistId = req.params.id;
+    const shoppinglistId = req.params.id;
 
-    Shoppinglist.remove({ _id: ShoppinglistId })
+    Shoppinglist.remove({ _id: shoppinglistId })
         .then(() => {
             res.status(204).send();
         })
