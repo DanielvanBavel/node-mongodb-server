@@ -1,6 +1,4 @@
 import express = require('express');
-const router = express.Router();
-
 import recipeRoutes from './recipe.routes';
 import shoppinglistRoutes from './shoppinglist.routes';
 
