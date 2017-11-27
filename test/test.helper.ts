@@ -8,3 +8,12 @@ before((done) => {
             console.error('Error connecting to test database', err);
         });
 });
+
+beforeEach((done) => {
+    const { users, recipes } = mongoose.connection.collections;
+    users.drop(() => {
+        recipes.drop(() => {
+            done();
+        });
+    });
+});
