@@ -1,8 +1,8 @@
 import { Document, Model, model, Schema } from 'mongoose';
-import { IShoppinglistDocument, ShoppinglistSchema } from './schemas/shoppinglist.schema';
+import { IngredientSchema, IIngredientDocument } from './schemas/ingredient.schema';
 
-export interface IShoppinglistModel extends Model<IShoppinglistDocument> { }
+export interface IShoppinglistModel extends Model<IIngredientDocument> { }
 
-export const Shoppinglist: IShoppinglistModel = model<IShoppinglistDocument, IShoppinglistModel>('Shoppinglist', ShoppinglistSchema);
+export const Shoppinglist: IShoppinglistModel = model<IIngredientDocument, IShoppinglistModel>('Shoppinglist', IngredientSchema);
 
 export default Shoppinglist;
