@@ -1,4 +1,5 @@
 import express = require('express');
+
 import { User } from '../../model/user.model';
 
 const routes = express.Router();
