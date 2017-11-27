@@ -1,5 +1,5 @@
 import { Document, Model, model, Schema } from 'mongoose';
-import { IShoppinglistDocument, ShoppinglistSchema } from './schemas/Shoppinglist.schema';
+import { IShoppinglistDocument, ShoppinglistSchema } from './schemas/shoppinglist.schema';
 
 export interface IShoppinglistModel extends Model<IShoppinglistDocument> { }
 
