@@ -2,10 +2,10 @@ import { Document, Schema } from 'mongoose';
 
 export interface IShoppinglistDocument extends Document {
     name: string;
-    number: string;
+    amount: number;
 }
 
 export const ShoppinglistSchema: Schema = new Schema({
     name: String,
-    number: String
+    amount: Number
 });
