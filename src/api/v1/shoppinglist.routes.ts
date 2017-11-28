@@ -1,5 +1,6 @@
 import express = require('express');
 import { Shoppinglist } from '../../model/shoppinglist.model';
+import { exists } from 'fs';
 
 const routes = express.Router();
 
@@ -23,6 +24,14 @@ routes.get('/:id', (req, res, next) => {
 
 routes.post('/', (req, res, next) => {
     const shoppinglistProps = req.body;
+
+    if (shoppinglistProps._id != null) {
+        delete shoppinglistProps._id;
+    }
+
+    if(shoppinglistProps._id) {
+        delete shoppinglistProps._id;
+    }
 
     Shoppinglist.create(shoppinglistProps)
         .then((shoppinglist) => {
